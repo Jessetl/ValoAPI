@@ -1,8 +1,42 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { ValidationPipe, Logger } from '@nestjs/common';
+import helmet from 'helmet';
+import compression from 'compression';
+import { AppModule } from './app.module.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  const logger = new Logger('Bootstrap');
+
+  // Seguridad HTTP headers
+  app.use(helmet());
+
+  // Compresion de respuestas
+  app.use(compression());
+
+  // CORS
+  app.enableCors({
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || [
+      'http://localhost:3000',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true,
+  });
+
+  // Validacion global de DTOs
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
+  // Prefijo global de API
+  app.setGlobalPrefix('api/v1');
+
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+  logger.log(`Application running on port ${port}`);
 }
 bootstrap();
