@@ -8,8 +8,11 @@ import { AppController } from './app.controller.js';
 import { FirebaseAdminModule } from './shared-kernel/infrastructure/firebase/firebase-admin.module.js';
 import { FirebaseAuthGuard } from './shared-kernel/infrastructure/guards/firebase-auth.guard.js';
 import { RolesGuard } from './shared-kernel/infrastructure/guards/roles.guard.js';
+import { AllExceptionsFilter } from './shared-kernel/infrastructure/filters/all-exceptions.filter.js';
+import { HttpExceptionFilter } from './shared-kernel/infrastructure/filters/http-exception.filter.js';
 import { DomainExceptionFilter } from './shared-kernel/infrastructure/filters/domain-exception.filter.js';
 import { LoggingInterceptor } from './shared-kernel/infrastructure/interceptors/logging.interceptor.js';
+import { ResponseTransformInterceptor } from './shared-kernel/infrastructure/interceptors/response-transform.interceptor.js';
 import { getDatabaseConfig } from './shared-kernel/infrastructure/config/database.config.js';
 import { UsersModule } from './modules/users/users.module.js';
 
@@ -75,7 +78,15 @@ import { UsersModule } from './modules/users/users.module.js';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-    // Filter global: traduce excepciones de dominio a HTTP
+    // Filters globales (orden: AllExceptions < HttpException < DomainException)
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
     {
       provide: APP_FILTER,
       useClass: DomainExceptionFilter,
@@ -84,6 +95,11 @@ import { UsersModule } from './modules/users/users.module.js';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    // Interceptor global: envuelve respuestas en formato estandar
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseTransformInterceptor,
     },
   ],
 })

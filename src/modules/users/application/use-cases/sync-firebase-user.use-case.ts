@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { UseCase } from '../../../../shared-kernel/application/use-case.js';
+import { ConflictException } from '../../../../shared-kernel/domain/exceptions/conflict.exception.js';
 import type { IUserRepository } from '../../domain/interfaces/repositories/user.repository.interface.js';
 import { USER_REPOSITORY } from '../../domain/interfaces/repositories/user.repository.interface.js';
 import { User } from '../../domain/entities/user.entity.js';
@@ -27,7 +28,23 @@ export class SyncFirebaseUserUseCase implements UseCase<
     }
 
     const user = User.create(randomUUID(), input.firebaseUid, input.email);
-    const saved = await this.userRepository.save(user);
-    return UserMapper.toResponse(saved);
+
+    // Try-catch para race condition: si dos requests concurrentes pasan el check
+    // de arriba, el segundo save falla por unique constraint — recuperamos buscando
+    // al usuario que ya fue creado por el primer request
+    try {
+      const saved = await this.userRepository.save(user);
+      return UserMapper.toResponse(saved);
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        const created = await this.userRepository.findByFirebaseUid(
+          input.firebaseUid,
+        );
+        if (created) {
+          return UserMapper.toResponse(created);
+        }
+      }
+      throw error;
+    }
   }
 }

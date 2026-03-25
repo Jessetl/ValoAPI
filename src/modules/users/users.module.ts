@@ -5,6 +5,8 @@ import { TypeOrmUserRepository } from './infrastructure/persistence/repositories
 import { USER_REPOSITORY } from './domain/interfaces/repositories/user.repository.interface.js';
 import { SyncFirebaseUserUseCase } from './application/use-cases/sync-firebase-user.use-case.js';
 import { GetUserByIdUseCase } from './application/use-cases/get-user-by-id.use-case.js';
+import { RegisterUserUseCase } from './application/use-cases/register-user.use-case.js';
+import { LoginUserUseCase } from './application/use-cases/login-user.use-case.js';
 import { UsersController } from './infrastructure/controllers/users.controller.js';
 
 @Module({
@@ -17,6 +19,8 @@ import { UsersController } from './infrastructure/controllers/users.controller.j
     },
     SyncFirebaseUserUseCase,
     GetUserByIdUseCase,
+    RegisterUserUseCase,
+    LoginUserUseCase,
   ],
   exports: [SyncFirebaseUserUseCase],
 })

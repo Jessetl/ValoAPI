@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { IUserRepository } from '../../../domain/interfaces/repositories/user.repository.interface.js';
 import { User } from '../../../domain/entities/user.entity.js';
 import { UserOrmEntity } from '../orm-entities/user.orm-entity.js';
 import { UserPersistenceMapper } from '../mappers/user-persistence.mapper.js';
+import { ConflictException } from '../../../../../shared-kernel/domain/exceptions/conflict.exception.js';
+
+// PostgreSQL error codes
+const PG_UNIQUE_VIOLATION = '23505';
 
 @Injectable()
 export class TypeOrmUserRepository implements IUserRepository {
@@ -25,8 +29,21 @@ export class TypeOrmUserRepository implements IUserRepository {
 
   async save(user: User): Promise<User> {
     const orm = UserPersistenceMapper.toOrm(user);
-    const saved = await this.ormRepository.save(orm);
-    return UserPersistenceMapper.toDomain(saved);
+    try {
+      const saved = await this.ormRepository.save(orm);
+      return UserPersistenceMapper.toDomain(saved);
+    } catch (error) {
+      // Transforma unique constraint violations de PostgreSQL en excepciones de dominio
+      if (
+        error instanceof QueryFailedError &&
+        (error as QueryFailedError & { code?: string }).code ===
+          PG_UNIQUE_VIOLATION
+      ) {
+        throw new ConflictException(`User with this data already exists`);
+      }
+      // Errores de DB inesperados (connection lost, timeout) suben al AllExceptionsFilter
+      throw error;
+    }
   }
 
   async delete(id: string): Promise<void> {

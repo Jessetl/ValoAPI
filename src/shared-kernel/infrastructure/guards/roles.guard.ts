@@ -1,25 +1,39 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import type { Request } from 'express';
 import { ROLES_KEY } from '../decorators/roles.decorator.js';
 import type { FirebaseUser } from './firebase-auth.guard.js';
+
+type AuthenticatedRequest = Request & {
+  user?: FirebaseUser;
+};
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>(
-      ROLES_KEY,
-      [context.getHandler(), context.getClass()],
-    );
+    const requiredRoles = this.getRequiredRoles(context);
 
     if (!requiredRoles) {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user: FirebaseUser = request.user;
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
 
-    return requiredRoles.some((role) => user.roles?.includes(role));
+    if (!user || !Array.isArray(user.roles) || user.roles.length === 0) {
+      return false;
+    }
+
+    const userRoles = new Set(user.roles);
+    return requiredRoles.some((role) => userRoles.has(role));
+  }
+
+  private getRequiredRoles(context: ExecutionContext): string[] | undefined {
+    return this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
   }
 }
