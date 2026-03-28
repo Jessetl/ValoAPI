@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { UseCase } from '../../../../shared-kernel/application/use-case.js';
-import { ConflictException } from '../../../../shared-kernel/domain/exceptions/conflict.exception.js';
-import type { IUserRepository } from '../../domain/interfaces/repositories/user.repository.interface.js';
-import { USER_REPOSITORY } from '../../domain/interfaces/repositories/user.repository.interface.js';
-import { User } from '../../domain/entities/user.entity.js';
-import { SyncUserDto } from '../dtos/sync-user.dto.js';
-import { UserResponseDto } from '../dtos/user-response.dto.js';
-import { UserMapper } from '../mappers/user.mapper.js';
+import { UseCase } from '../../../../shared-kernel/application/use-case';
+import { ConflictException } from '../../../../shared-kernel/domain/exceptions/conflict.exception';
+import type { IUserRepository } from '../../domain/interfaces/repositories/user.repository.interface';
+import { USER_REPOSITORY } from '../../domain/interfaces/repositories/user.repository.interface';
+import { User } from '../../domain/entities/user.entity';
+import { SyncUserDto } from '../dtos/sync-user.dto';
+import { UserResponseDto } from '../dtos/user-response.dto';
+import { UserMapper } from '../mappers/user.mapper';
 
 @Injectable()
 export class SyncFirebaseUserUseCase implements UseCase<

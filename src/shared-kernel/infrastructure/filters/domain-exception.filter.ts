@@ -6,12 +6,12 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { DomainException } from '../../domain/exceptions/domain.exception.js';
-import { NotFoundException } from '../../domain/exceptions/not-found.exception.js';
-import { ConflictException } from '../../domain/exceptions/conflict.exception.js';
-import { ValidationException } from '../../domain/exceptions/validation.exception.js';
-import { UnauthorizedException } from '../../domain/exceptions/unauthorized.exception.js';
-import { ExternalServiceException } from '../../domain/exceptions/external-service.exception.js';
+import { DomainException } from '../../domain/exceptions/domain.exception';
+import { NotFoundException } from '../../domain/exceptions/not-found.exception';
+import { ConflictException } from '../../domain/exceptions/conflict.exception';
+import { ValidationException } from '../../domain/exceptions/validation.exception';
+import { UnauthorizedException } from '../../domain/exceptions/unauthorized.exception';
+import { ExternalServiceException } from '../../domain/exceptions/external-service.exception';
 
 @Catch(DomainException)
 export class DomainExceptionFilter implements ExceptionFilter {

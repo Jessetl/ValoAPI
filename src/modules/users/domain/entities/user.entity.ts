@@ -1,4 +1,4 @@
-import { BaseEntity } from '../../../../shared-kernel/domain/base-entity.js';
+import { BaseEntity } from '../../../../shared-kernel/domain/base-entity';
 
 interface UserProfileProps {
   firstName?: string | null;

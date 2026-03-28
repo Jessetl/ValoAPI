@@ -1,11 +1,18 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import type { FirebaseUser } from '../guards/firebase-auth.guard.js';
+import type { FirebaseUser } from '../guards/firebase-auth.guard';
 
-export const CurrentUser = createParamDecorator(
-  (data: keyof FirebaseUser | undefined, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
-    const user: FirebaseUser = request.user;
+type CurrentUserParam = keyof FirebaseUser | undefined;
+type CurrentUserValue =
+  | FirebaseUser
+  | FirebaseUser[keyof FirebaseUser]
+  | undefined;
 
-    return data ? user?.[data] : user;
-  },
-);
+export const CurrentUser = createParamDecorator<
+  CurrentUserParam,
+  CurrentUserValue
+>((data, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest<{ user?: FirebaseUser }>();
+  const user = request.user;
+
+  return data ? user?.[data] : user;
+});

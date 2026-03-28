@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  UnauthorizedException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -13,20 +14,20 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { CurrentUser } from '../../../../shared-kernel/infrastructure/decorators/current-user.decorator.js';
-import { Public } from '../../../../shared-kernel/infrastructure/decorators/public.decorator.js';
-import { ParseUUIDPipe } from '../../../../shared-kernel/infrastructure/pipes/parse-uuid.pipe.js';
-import { SyncFirebaseUserUseCase } from '../../application/use-cases/sync-firebase-user.use-case.js';
-import { GetUserByIdUseCase } from '../../application/use-cases/get-user-by-id.use-case.js';
-import { RegisterUserUseCase } from '../../application/use-cases/register-user.use-case.js';
-import { LoginUserUseCase } from '../../application/use-cases/login-user.use-case.js';
-import { RefreshUserTokenUseCase } from '../../application/use-cases/refresh-user-token.use-case.js';
-import { RegisterUserDto } from '../../application/dtos/register-user.dto.js';
-import { LoginUserDto } from '../../application/dtos/login-user.dto.js';
-import { RefreshTokenDto } from '../../application/dtos/refresh-token.dto.js';
-import { UserResponseDto } from '../../application/dtos/user-response.dto.js';
-import { LoginResponseDto } from '../../application/dtos/login-response.dto.js';
-import type { FirebaseUser } from '../../../../shared-kernel/infrastructure/guards/firebase-auth.guard.js';
+import { CurrentUser } from '../../../../shared-kernel/infrastructure/decorators/current-user.decorator';
+import { Public } from '../../../../shared-kernel/infrastructure/decorators/public.decorator';
+import { ParseUUIDPipe } from '../../../../shared-kernel/infrastructure/pipes/parse-uuid.pipe';
+import { SyncFirebaseUserUseCase } from '../../application/use-cases/sync-firebase-user.use-case';
+import { GetUserByIdUseCase } from '../../application/use-cases/get-user-by-id.use-case';
+import { RegisterUserUseCase } from '../../application/use-cases/register-user.use-case';
+import { LoginUserUseCase } from '../../application/use-cases/login-user.use-case';
+import { RefreshUserTokenUseCase } from '../../application/use-cases/refresh-user-token.use-case';
+import { RegisterUserDto } from '../../application/dtos/register-user.dto';
+import { LoginUserDto } from '../../application/dtos/login-user.dto';
+import { RefreshTokenDto } from '../../application/dtos/refresh-token.dto';
+import { UserResponseDto } from '../../application/dtos/user-response.dto';
+import { LoginResponseDto } from '../../application/dtos/login-response.dto';
+import type { FirebaseUser } from '../../../../shared-kernel/infrastructure/guards/firebase-auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -97,9 +98,17 @@ export class UsersController {
   })
   @ApiResponse({ status: 401, description: 'Token invalido o ausente' })
   async getMe(@CurrentUser() user: FirebaseUser) {
+    const email = user.email?.trim();
+    const hasValidEmail =
+      typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!user.uid || !hasValidEmail) {
+      throw new UnauthorizedException('Invalid Firebase token payload');
+    }
+
     return this.syncFirebaseUser.execute({
       firebaseUid: user.uid,
-      email: user.email || '',
+      email,
     });
   }
 

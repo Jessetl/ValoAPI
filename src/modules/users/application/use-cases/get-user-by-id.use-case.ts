@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { UseCase } from '../../../../shared-kernel/application/use-case.js';
-import type { IUserRepository } from '../../domain/interfaces/repositories/user.repository.interface.js';
-import { USER_REPOSITORY } from '../../domain/interfaces/repositories/user.repository.interface.js';
-import { UserResponseDto } from '../dtos/user-response.dto.js';
-import { UserMapper } from '../mappers/user.mapper.js';
-import { UserNotFoundException } from '../../domain/exceptions/user-not-found.exception.js';
+import { UseCase } from '../../../../shared-kernel/application/use-case';
+import type { IUserRepository } from '../../domain/interfaces/repositories/user.repository.interface';
+import { USER_REPOSITORY } from '../../domain/interfaces/repositories/user.repository.interface';
+import { UserResponseDto } from '../dtos/user-response.dto';
+import { UserMapper } from '../mappers/user.mapper';
+import { UserNotFoundException } from '../../domain/exceptions/user-not-found.exception';
 
 @Injectable()
 export class GetUserByIdUseCase implements UseCase<string, UserResponseDto> {

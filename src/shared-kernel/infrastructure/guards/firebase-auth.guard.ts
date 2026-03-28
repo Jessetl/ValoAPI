@@ -8,8 +8,8 @@ import {
 import { Reflector } from '@nestjs/core';
 import * as admin from 'firebase-admin';
 import type { Request } from 'express';
-import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
-import { FIREBASE_ADMIN } from '../firebase/firebase-admin.provider.js';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { FIREBASE_ADMIN } from '../firebase/firebase-admin.provider';
 
 export interface FirebaseUser {
   uid: string;

@@ -4,17 +4,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { CacheModule } from '@nestjs/cache-manager';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { AppController } from './app.controller.js';
-import { FirebaseAdminModule } from './shared-kernel/infrastructure/firebase/firebase-admin.module.js';
-import { FirebaseAuthGuard } from './shared-kernel/infrastructure/guards/firebase-auth.guard.js';
-import { RolesGuard } from './shared-kernel/infrastructure/guards/roles.guard.js';
-import { AllExceptionsFilter } from './shared-kernel/infrastructure/filters/all-exceptions.filter.js';
-import { HttpExceptionFilter } from './shared-kernel/infrastructure/filters/http-exception.filter.js';
-import { DomainExceptionFilter } from './shared-kernel/infrastructure/filters/domain-exception.filter.js';
-import { LoggingInterceptor } from './shared-kernel/infrastructure/interceptors/logging.interceptor.js';
-import { ResponseTransformInterceptor } from './shared-kernel/infrastructure/interceptors/response-transform.interceptor.js';
-import { getDatabaseConfig } from './shared-kernel/infrastructure/config/database.config.js';
-import { UsersModule } from './modules/users/users.module.js';
+import { AppController } from './app.controller';
+import { FirebaseAdminModule } from './shared-kernel/infrastructure/firebase/firebase-admin.module';
+import { FirebaseAuthGuard } from './shared-kernel/infrastructure/guards/firebase-auth.guard';
+import { RolesGuard } from './shared-kernel/infrastructure/guards/roles.guard';
+import { AllExceptionsFilter } from './shared-kernel/infrastructure/filters/all-exceptions.filter';
+import { HttpExceptionFilter } from './shared-kernel/infrastructure/filters/http-exception.filter';
+import { DomainExceptionFilter } from './shared-kernel/infrastructure/filters/domain-exception.filter';
+import { LoggingInterceptor } from './shared-kernel/infrastructure/interceptors/logging.interceptor';
+import { ResponseTransformInterceptor } from './shared-kernel/infrastructure/interceptors/response-transform.interceptor';
+import { getDatabaseConfig } from './shared-kernel/infrastructure/config/database.config';
+import { UsersModule } from './modules/users/users.module';
+import { ShoppingListsModule } from './modules/shopping-lists/shopping-lists.module';
+import { ExchangeRatesModule } from './modules/exchange-rates/exchange-rates.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { UsersModule } from './modules/users/users.module.js';
 
     // Modulos de dominio
     UsersModule,
+    ShoppingListsModule,
+    ExchangeRatesModule,
 
     // Rate limiting
     ThrottlerModule.forRoot([

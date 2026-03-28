@@ -1,17 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import * as admin from 'firebase-admin';
-import { UseCase } from '../../../../shared-kernel/application/use-case.js';
-import { FIREBASE_ADMIN } from '../../../../shared-kernel/infrastructure/firebase/firebase-admin.provider.js';
-import type { IUserRepository } from '../../domain/interfaces/repositories/user.repository.interface.js';
-import { USER_REPOSITORY } from '../../domain/interfaces/repositories/user.repository.interface.js';
-import { User } from '../../domain/entities/user.entity.js';
-import { RegisterUserDto } from '../dtos/register-user.dto.js';
-import { UserResponseDto } from '../dtos/user-response.dto.js';
-import { UserMapper } from '../mappers/user.mapper.js';
-import { UserAlreadyExistsException } from '../../domain/exceptions/user-already-exists.exception.js';
-import { ConflictException } from '../../../../shared-kernel/domain/exceptions/conflict.exception.js';
-import { ExternalServiceException } from '../../../../shared-kernel/domain/exceptions/external-service.exception.js';
+import { UseCase } from '../../../../shared-kernel/application/use-case';
+import { FIREBASE_ADMIN } from '../../../../shared-kernel/infrastructure/firebase/firebase-admin.provider';
+import type { IUserRepository } from '../../domain/interfaces/repositories/user.repository.interface';
+import { USER_REPOSITORY } from '../../domain/interfaces/repositories/user.repository.interface';
+import { User } from '../../domain/entities/user.entity';
+import { RegisterUserDto } from '../dtos/register-user.dto';
+import { UserResponseDto } from '../dtos/user-response.dto';
+import { UserMapper } from '../mappers/user.mapper';
+import { UserAlreadyExistsException } from '../../domain/exceptions/user-already-exists.exception';
+import { ConflictException } from '../../../../shared-kernel/domain/exceptions/conflict.exception';
+import { ExternalServiceException } from '../../../../shared-kernel/domain/exceptions/external-service.exception';
 
 @Injectable()
 export class RegisterUserUseCase implements UseCase<

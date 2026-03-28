@@ -1,4 +1,4 @@
-import { ConflictException } from '../../../../shared-kernel/domain/exceptions/conflict.exception.js';
+import { ConflictException } from '../../../../shared-kernel/domain/exceptions/conflict.exception';
 
 export class UserAlreadyExistsException extends ConflictException {
   constructor(firebaseUid: string) {

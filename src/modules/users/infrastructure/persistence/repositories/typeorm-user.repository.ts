@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryFailedError, Repository } from 'typeorm';
-import { IUserRepository } from '../../../domain/interfaces/repositories/user.repository.interface.js';
-import { User } from '../../../domain/entities/user.entity.js';
-import { UserOrmEntity } from '../orm-entities/user.orm-entity.js';
-import { UserPersistenceMapper } from '../mappers/user-persistence.mapper.js';
-import { ConflictException } from '../../../../../shared-kernel/domain/exceptions/conflict.exception.js';
+import { IUserRepository } from '../../../domain/interfaces/repositories/user.repository.interface';
+import { User } from '../../../domain/entities/user.entity';
+import { UserOrmEntity } from '../orm-entities/user.orm-entity';
+import { UserPersistenceMapper } from '../mappers/user-persistence.mapper';
+import { ConflictException } from '../../../../../shared-kernel/domain/exceptions/conflict.exception';
 
 // PostgreSQL error codes
 const PG_UNIQUE_VIOLATION = '23505';

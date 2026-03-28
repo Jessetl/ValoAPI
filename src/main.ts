@@ -3,7 +3,7 @@ import { ValidationPipe, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import compression from 'compression';
-import { AppModule } from './app.module.js';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -38,12 +38,23 @@ async function bootstrap() {
 
   // Swagger
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('ValoAPI')
-    .setDescription('API de ValoAPI')
+    .setTitle('Kashy API')
+    .setDescription(
+      'API de Kashy — Gestion inteligente de compras de supermercado con seguimiento de precios VES/USD y organizador de deudas/cobros personales.',
+    )
     .setVersion('1.0')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'firebase-token',
+    )
+    .addTag('Users', 'Registro, login, refresh token y perfil de usuario')
+    .addTag(
+      'Shopping Lists',
+      'CRUD de listas de compras con items y conversion VES/USD',
+    )
+    .addTag(
+      'Exchange Rates',
+      'Tasa de cambio VES/USD oficial desde DolarAPI (endpoint publico)',
     )
     .build();
 
@@ -55,4 +66,10 @@ async function bootstrap() {
   logger.log(`Application running on port ${port}`);
   logger.log(`Swagger available at http://localhost:${port}/docs`);
 }
-bootstrap();
+
+bootstrap().catch((error: unknown) => {
+  const logger = new Logger('Bootstrap');
+  const message = error instanceof Error ? error.message : String(error);
+  logger.error(`Failed to start application: ${message}`);
+  process.exit(1);
+});

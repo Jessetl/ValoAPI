@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { randomUUID } from 'crypto';
-import { UseCase } from '../../../../shared-kernel/application/use-case.js';
-import { UnauthorizedException } from '../../../../shared-kernel/domain/exceptions/unauthorized.exception.js';
-import { ExternalServiceException } from '../../../../shared-kernel/domain/exceptions/external-service.exception.js';
-import type { IUserRepository } from '../../domain/interfaces/repositories/user.repository.interface.js';
-import { USER_REPOSITORY } from '../../domain/interfaces/repositories/user.repository.interface.js';
-import { User } from '../../domain/entities/user.entity.js';
-import { RefreshTokenDto } from '../dtos/refresh-token.dto.js';
-import { LoginResponseDto } from '../dtos/login-response.dto.js';
-import { UserMapper } from '../mappers/user.mapper.js';
+import { UseCase } from '../../../../shared-kernel/application/use-case';
+import { UnauthorizedException } from '../../../../shared-kernel/domain/exceptions/unauthorized.exception';
+import { ExternalServiceException } from '../../../../shared-kernel/domain/exceptions/external-service.exception';
+import type { IUserRepository } from '../../domain/interfaces/repositories/user.repository.interface';
+import { USER_REPOSITORY } from '../../domain/interfaces/repositories/user.repository.interface';
+import { User } from '../../domain/entities/user.entity';
+import { RefreshTokenDto } from '../dtos/refresh-token.dto';
+import { LoginResponseDto } from '../dtos/login-response.dto';
+import { UserMapper } from '../mappers/user.mapper';
 
 interface FirebaseRefreshResponse {
   id_token: string;

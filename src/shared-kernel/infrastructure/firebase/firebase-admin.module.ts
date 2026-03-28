@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import {
   firebaseAdminProvider,
   FIREBASE_ADMIN,
-} from './firebase-admin.provider.js';
+} from './firebase-admin.provider';
 
 @Global()
 @Module({

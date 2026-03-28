@@ -1,0 +1,12 @@
+import { ApiProperty } from '@nestjs/swagger';
+
+export class ExchangeRateResponseDto {
+  @ApiProperty({ example: 468.5145 })
+  rateVesPerUsd: number;
+
+  @ApiProperty({ example: 'oficial' })
+  source: string;
+
+  @ApiProperty({ example: '2026-03-27T00:00:00.000Z' })
+  fetchedAt: Date;
+}

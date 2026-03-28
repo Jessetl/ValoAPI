@@ -1,4 +1,4 @@
-import { IDomainEvent } from './domain-event.js';
+import { IDomainEvent } from './domain-event';
 
 export abstract class BaseEntity {
   private _domainEvents: IDomainEvent[] = [];

@@ -1,8 +1,8 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
-import { ROLES_KEY } from '../decorators/roles.decorator.js';
-import type { FirebaseUser } from './firebase-auth.guard.js';
+import { ROLES_KEY } from '../decorators/roles.decorator';
+import type { FirebaseUser } from './firebase-auth.guard';
 
 type AuthenticatedRequest = Request & {
   user?: FirebaseUser;
